@@ -5,13 +5,13 @@ from enum import Enum
 class OccupiedBy(Enum):
     COMPUTER=-1
     EMPTY=0
-    PLAYER=1
+    HUMAN=1
 
 
 class Winner(Enum):
     NONE=0
     COMPUTER=1
-    PLAYER=2
+    HUMAN=2
     DRAW=3
 
 
@@ -36,10 +36,10 @@ def line_170(board, g, h, j, k):
                 return Space.TOP_LEFT # Line 181
             elif board[Space.BOTTOM_LEFT] == g and board[Space.TOP_RIGHT] is OccupiedBy.EMPTY: # Line 173
                 return Space.TOP_RIGHT # Line 183
-            elif board[Space.BOTTOM_RIGHT] is OccupiedBy.PLAYER and board[Space.TOP_RIGHT] is OccupiedBy.EMPTY: # Line 174
+            elif board[Space.BOTTOM_RIGHT] is OccupiedBy.HUMAN and board[Space.TOP_RIGHT] is OccupiedBy.EMPTY: # Line 174
                 return Space.TOP_RIGHT # Line 189
             elif g is OccupiedBy.COMPUTER:
-                g = OccupiedBy.PLAYER
+                g = OccupiedBy.HUMAN
                 h = OccupiedBy.COMPUTER
                 return line_118(board, g, h, j, k)
 
@@ -85,15 +85,15 @@ def think(board, g, h, moves):
     if board[Space.MID_CENTER] is OccupiedBy.EMPTY:
         return Space.MID_CENTER
 
-    if board[Space.MID_CENTER] is OccupiedBy.PLAYER:
-        if board[Space.TOP_CENTER] is OccupiedBy.PLAYER and board[Space.TOP_LEFT] is OccupiedBy.EMPTY \
-           or board[Space.MID_LEFT] is OccupiedBy.PLAYER and board[Space.TOP_LEFT] is OccupiedBy.EMPTY:
+    if board[Space.MID_CENTER] is OccupiedBy.HUMAN:
+        if board[Space.TOP_CENTER] is OccupiedBy.HUMAN and board[Space.TOP_LEFT] is OccupiedBy.EMPTY \
+           or board[Space.MID_LEFT] is OccupiedBy.HUMAN and board[Space.TOP_LEFT] is OccupiedBy.EMPTY:
              return Space.BOT_LEFT
-        elif board[Space.MID_RIGHT] is OccupiedBy.PLAYER and board[Space.BOT_RIGHT] is OccupiedBy.EMPTY \
-           or board[Space.BOT_CENTER] is OccupiedBy.PLAYER and board[Space.BOT_RIGHT] is OccupiedBy.EMPTY:
+        elif board[Space.MID_RIGHT] is OccupiedBy.HUMAN and board[Space.BOT_RIGHT] is OccupiedBy.EMPTY \
+           or board[Space.BOT_CENTER] is OccupiedBy.HUMAN and board[Space.BOT_RIGHT] is OccupiedBy.EMPTY:
              return Space.BOT_RIGHT
 
-    if g == OccupiedBy.PLAYER:
+    if g == OccupiedBy.HUMAN:
         j = 3 * int((moves-1) / 3)
         if move == j + 1:
             k = 1
@@ -123,8 +123,8 @@ def determine_winner(board, g):
             continue # First third of Line 1115 
         elif board[i] == OccupiedBy.COMPUTER: # 
             return Winner.COMPUTER
-        elif board[i] == OccupiedBy.PLAYER:
-            return Winner.PLAYER
+        elif board[i] == OccupiedBy.HUMAN:
+            return Winner.HUMAN
 
     # Check for matching vertical lines
     for i in range(Space.TOP_LEFT.value, Space.TOP_LEFT.value + 1, 1):  # Second third of Line 1115
@@ -132,8 +132,8 @@ def determine_winner(board, g):
             continue # First third of 1150
         elif board[i] == OccupiedBy.COMPUTER: # Line 1135
             return Winner.COMPUTER
-        elif board[i] == OccupiedBy.PLAYER:   # Line 1137
-            return Winner.PLAYER
+        elif board[i] == OccupiedBy.HUMAN:   # Line 1137
+            return Winner.HUMAN
 
     # Check diagonals
     if any(space is OccupiedBy.EMPTY for space in board):
@@ -141,7 +141,7 @@ def determine_winner(board, g):
             return Winner.NONE
         elif (board[Space.TOP_LEFT.value] == g and board[Space.BOT_RIGHT.value] == g) or \
             (board[Space.BOT_LEFT.value] == g and board[Space.TOP_RIGHT.value] == g):
-            return Winner.COMPUTER if g is OccupiedBy.COMPUTER else Winner.PLAYER
+            return Winner.COMPUTER if g is OccupiedBy.COMPUTER else Winner.HUMAN
         else:
             return Winner.NONE
 
@@ -182,10 +182,10 @@ def play():
 
     # Default state
     board = [OccupiedBy.EMPTY] * 9
-    current_player = OccupiedBy.PLAYER
+    current_player = OccupiedBy.HUMAN
     space_mapping = {
         OccupiedBy.EMPTY: '   ',
-        OccupiedBy.PLAYER: ' X ',
+        OccupiedBy.HUMAN: ' X ',
         OccupiedBy.COMPUTER: ' O '
     }
 
@@ -194,12 +194,12 @@ def play():
     # If the player doesn't choose X, then assume you want O
     # and the computer goes first.
     if symbol != "X":
-        space_mapping[OccupiedBy.PLAYER] = ' O '
+        space_mapping[OccupiedBy.HUMAN] = ' O '
         space_mapping[OccupiedBy.COMPUTER] = ' X '
         current_player = OccupiedBy.COMPUTER
 
     while True:
-        if current_player is OccupiedBy.PLAYER:
+        if current_player is OccupiedBy.HUMAN:
             move = prompt_player(board)
             if move == 0:
                 print("THANKS FOR THE GAME.")
@@ -220,8 +220,8 @@ def play():
            break
 
         if current_player is OccupiedBy.COMPUTER:
-            current_player = OccupiedBy.PLAYER
-        elif current_player is OccupiedBy.PLAYER:
+            current_player = OccupiedBy.HUMAN
+        elif current_player is OccupiedBy.HUMAN:
             current_player = OccupiedBy.COMPUTER
 
 
