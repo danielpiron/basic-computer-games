@@ -216,8 +216,14 @@ def play():
         winner = determine_winner(board, current_player)
 
         if winner is not Winner.NONE:
-           print(winner)
-           break
+            if winner is Winner.HUMAN:
+                print("YOU BEAT ME!! GOOD GAME.")
+            elif winner is Winner.COMPUTER:
+                print("I WIN, TURKEY!!!")
+            else:
+                print("IT'S A DRAW. THANK YOU.")
+
+            break
 
         if current_player is OccupiedBy.COMPUTER:
             current_player = OccupiedBy.HUMAN
